@@ -70,6 +70,16 @@ def change_upto_two_values_generator(state):
 	# update neighbor.changes 
 	# yield neighbor
 
+	while True:
+		neighbor = state.copy()
+		for _ in range(random.choice((1,2))):
+			var = random.choice(problem.variables)
+			value = random.choice(problem.domain[var])
+
+			neighbor.solution[var] = value
+			neighbor.changes = [(var, value)]
+		yield neighbor
+
 
 def swap_two_values_generator(state):
 	problem = state.problem

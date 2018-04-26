@@ -90,7 +90,7 @@ if __name__ == '__main__':
     import time
     start = time.time()
 
-    test = 6
+    test = 1
 
     if test == 1:
         test1()

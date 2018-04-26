@@ -119,7 +119,12 @@ class ExactSum(Constraint):
 		# check if sum of values is the target sum
 		# dont test if not all vars assigned
 		# return True / False
-		return sum(values) == self.target_sum
+		# return sum(values) == self.target_sum
+
+		if len(self.variables) == len(values):
+			return sum(values) == self.target_sum
+		else:
+			return True
 
 ### Magic Series Constraints ###
 
@@ -134,10 +139,17 @@ class MagicSeries(Constraint):
 		# Example: if 2 is assigned to index 1, there must be two 1s in the series
 		# dont test if not all vars assigned 
 		# return True / False
+		# constraints = []
+		# for i, val in enumerate(values):
+		# 	constraints.append(val == len([x for x in values if x == i]))
+		# return all(constraints)
 		constraints = []
-		for i, val in enumerate(values):
-			constraints.append(val == len([x for x in values if x == i]))
-		return all(constraints)
+		if len(self.variables) != len(values):
+			return True
+		else:
+			for i, val in enumerate(values):
+				constraints.append(val == len([x for x in values if x == i]))
+			return all(constraints)
 
 ### Knapsack Constraints ###
 

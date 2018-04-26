@@ -40,7 +40,6 @@ def problem(N):
 		c = ExactSum(column, magic_sum)
 		c.name = 'ExactSum Col {}'.format(x)
 		constraints.append(c)
-		print(vars(c))
 
 
 	# 3) Each row has same total (ExactSum: magic_sum)

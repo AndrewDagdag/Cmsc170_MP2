@@ -33,6 +33,20 @@ def change_upto_two_values(state):
 	# dont reassign to current values
 	# update neighbor.changes 
 
+	for var1, var2 in itertools.combinations(problem.variables, 2):
+		for val1, val2 in itertools.product(problem.domain[var1], problem.domain[var2]):
+			# don't reassign to same value
+			if val1 == solution[var1] or val2 == solution[var2]:
+				continue
+
+			neighbor = state.copy()
+			neighbor.solution[var1] = val1
+			neighbor.solution[var2] = val2
+			neighbor.changes = [(var1, val1), (var2, val2)]
+			neighbors.append(neighbor)
+
+	return neighbors
+
 
 def swap_two_values(state):
 	problem = state.problem
@@ -43,6 +57,20 @@ def swap_two_values(state):
 	# use itertools.combinations
 	# dont swap same values
 	# update neighbor.changes 
+
+	neighbors = []
+	for var1, var2 in itertools.combinations(problem.variables, 2):
+		if solution[var1] == solution[var2]:
+			continue
+
+		neighbor = state.copy()
+		val1, val2 = neighbor.solution[var1], neighbor.solution[var2]
+		neighbor.solution[var1] = val2
+		neighbor.solution[var2] = val1
+		neighbor.changes = [(var1, val2), (var2, val1)]
+		neighbors.append(neighbor)
+
+	return neighbors
 
 
 ### NEIGHBOR GENERATORS ###
@@ -72,12 +100,13 @@ def change_upto_two_values_generator(state):
 
 	while True:
 		neighbor = state.copy()
-		for _ in range(random.choice((1,2))):
+		neighbor.changes = []
+		for _ in range(random.choice((1, 2))):
 			var = random.choice(problem.variables)
 			value = random.choice(problem.domain[var])
 
 			neighbor.solution[var] = value
-			neighbor.changes = [(var, value)]
+			neighbor.changes.append((var, value))
 		yield neighbor
 
 
@@ -98,7 +127,7 @@ def swap_two_values_generator(state):
 		val1, val2 = neighbor.solution[a], neighbor.solution[b]
 		neighbor.solution[a] = val2
 		neighbor.solution[b] = val1
-		neighbor.changes = [(a, val1), (b, val2)]
+		neighbor.changes = [(a, val2), (b, val1)]
 		yield neighbor
 
 

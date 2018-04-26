@@ -231,7 +231,7 @@ def random_walking_config(config,reverse):
         config.legal_neighbor_fn = non_increasing
     else: # uphill
         config.legal_neighbor_fn = non_decreasing
-    
+
 def min_conflict_config(config):
     config.neighborhood_fn = min_conflict
     config.legal_neighbor_fn = all_neighbors
@@ -251,7 +251,7 @@ def knapsack_config(config,problem):
     config.objective_fn = knapsack_objective
     config.best_fn = max
     config.best_possible_score = problem.total_value
-    
+
 def vertex_cover_config(config):
     config.objective_fn = vertex_cover_objective
     config.best_fn = min
@@ -261,7 +261,7 @@ if __name__ == '__main__':
     import time
     start = time.time()
 
-    test = 1
+    test = 3
 
     if test == 1:
         test1()

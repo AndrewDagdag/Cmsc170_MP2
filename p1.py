@@ -4,19 +4,19 @@ from problem import knapsack,vertex_cover
 
 from solver.bf import BruteForceSolver
 from solver.bt import BacktrackingSolver
-from fn.bt import * 
-from utils import * 
+from fn.bt import *
+from utils import *
 
 
 def test1():
-    problem_name = 'plants'
-    # problem_name = 'magic_square'
+    # problem_name = 'plants'
+    problem_name = 'magic_square'
     # problem_name = 'magic_series'
     # problem_name = 'knapsack'
     # problem_name = 'vertex_cover'
 
-    solver_name = 'brute_force'
-    # solver_name = 'backtracking'
+    # solver_name = 'brute_force'
+    solver_name = 'backtracking'
 
     solution_limit = 0
     # solution_limit = 1

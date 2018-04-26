@@ -27,8 +27,8 @@ def select_problem(problem_name,config):
 def main():
     config = Config()
 
-    problem_name = 'maxone'
-    # problem_name = 'knapsack'
+    # problem_name = 'maxone'
+    problem_name = 'knapsack'
     # problem_name = 'vertex_cover'
 
     problem = select_problem(problem_name,config)
@@ -41,21 +41,21 @@ def main():
     config.explain = True
 
     # POPULATION
-    config.population_size = 20     # 20, 50
+    config.population_size = 50     # 20, 50
     config.replace_population = generational
     # config.replace_population = choose_best
 
     # SELECTION
     config.max_parent_similarity = 0.9 # 0.9, 0.5
-    config.select_parents = fitness_proportionate
-    # config.select_parents = tournament_selection
+    # config.select_parents = fitness_proportionate
+    config.select_parents = tournament_selection
     config.tournament_k = int(0.2 * config.population_size)
 
     # CROSSOVER
-    config.prob_crossover = 0.90    # 0.90, 0.60
-    config.crossover = one_point_crossover
+    config.prob_crossover = 0.60    # 0.90, 0.60
+    # config.crossover = one_point_crossover
     # config.crossover = two_point_crossover
-    # config.crossover = uniform_crossover
+    config.crossover = uniform_crossover
 
     # MUTATION
     config.prob_mutate =  0.5   # 0.3, 0.5

@@ -76,9 +76,13 @@ def custom_value_ordering(state,variable):
 	# INSERT CODE HERE
 	# Write your value ordering code here 
 	# Return sorted values, accdg. to some heuristic
-	
-	if len(domain) > 0:
+	print ("State: ",state)
+	print ("Variable: ",variable)
+
+	domainLength = len(domain)
+	if domainLength > 0:
 		
+	else:
 
 	# Suggestions:
 	# Heuristic: least constraining value (LCV)

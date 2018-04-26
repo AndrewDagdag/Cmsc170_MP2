@@ -91,6 +91,17 @@ def swap_two_values_generator(state):
 	# update neighbor.changes 
 	# yield neighbor
 
+	while True:
+		a, b = random.sample(problem.variables, 2)
+
+		neighbor = state.copy()
+		val1, val2 = neighbor.solution[a], neighbor.solution[b]
+		neighbor.solution[a] = val2
+		neighbor.solution[b] = val1
+		neighbor.changes = [(a, val1), (b, val2)]
+		yield neighbor
+
+
 ### MAX-MIN CONFLICT ###
 
 def min_conflict(state,var=None):

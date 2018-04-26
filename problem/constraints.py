@@ -106,7 +106,7 @@ class LeftNeighbor(BinaryConstraint):
 
 class ExactSum(Constraint):
 	def __init__(self,variables,target_sum,penalty=0):
-		self.variables = variables 
+		self.variables = variables
 		self.target_sum = target_sum
 		self.penalty = penalty or float('inf') # hard, if penalty undefined
 		self.name = 'undefined'
@@ -119,7 +119,6 @@ class ExactSum(Constraint):
 		# check if sum of values is the target sum
 		# dont test if not all vars assigned
 		# return True / False
-		# return sum(values) == self.target_sum
 
 		if len(self.variables) == len(values):
 			return sum(values) == self.target_sum

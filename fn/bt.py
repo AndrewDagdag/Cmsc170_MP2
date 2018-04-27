@@ -47,7 +47,7 @@ def custom_variable_selector(state):
 					degree += 1
 				if var in constraint.variables:
 					degree_var += 1
-			if degree_var > degree:
+			if degree_var >= degree:
 				selected = var
 	return selected
 

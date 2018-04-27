@@ -106,7 +106,7 @@ class LeftNeighbor(BinaryConstraint):
 
 class ExactSum(Constraint):
 	def __init__(self,variables,target_sum,penalty=0):
-		self.variables = variables 
+		self.variables = variables
 		self.target_sum = target_sum
 		self.penalty = penalty or float('inf') # hard, if penalty undefined
 		self.name = 'undefined'
@@ -119,7 +119,6 @@ class ExactSum(Constraint):
 		# check if sum of values is the target sum
 		# dont test if not all vars assigned
 		# return True / False
-		# return sum(values) == self.target_sum
 
 		if len(self.variables) == len(values):
 			return sum(values) == self.target_sum
@@ -174,7 +173,6 @@ class KnapsackCapacity(Constraint):
 					return False
 		return True
 
-		
 
 ### Vertex Cover Constraints ###
 
@@ -193,29 +191,19 @@ class VertexCover(Constraint):
 		# if at least one edge is not covered --> fail
 		# dont test if not all vars assigned 
 		# return True / False
-		active_vertices = []
+
 		if not set(solution.keys()).issuperset(self.variables): #Test only if all vars assigned
 			return True
 		
+		active_vertices = []
 		for key, value in solution.items():
 			if value:
 				active_vertices.append(key)
-		
-		# if set(active_vertices).issubset(set(self.edges)):
-			# return True
-		# return False
-		
-		ticker = []
-		for x in range(len(self.edges)):
-			ticker.append(False)
 
-		for x in self.edges:
-			for y in active_vertices:
-				if y in x:
-					ticker[self.edges.index(x)] = True
-		if False in ticker:
-			return False
+		for edge in self.edges:
+			for v in active_vertices:
+				if v in edge:
+					break
+			else:
+				return False
 		return True
-
-# x for x in values if x == i]
-

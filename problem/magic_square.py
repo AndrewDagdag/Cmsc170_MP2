@@ -1,4 +1,4 @@
-from problem.problem import Problem 
+from problem.problem import Problem
 from problem.constraints import *
 
 def problem(N):
@@ -11,7 +11,7 @@ def problem(N):
 
 	# Variables
 	variables = []
-	for y in range(N): 
+	for y in range(N):
 		for x in range(N):
 			square = '%d,%d' % (x,y) # x,y coords
 			variables.append(square)
@@ -24,7 +24,7 @@ def problem(N):
 	# Note: Use ExactSum, where sum is magic_sum
 	constraints = []
 	# Hint: Find out how to solve for magic sum or magic constant
-	magic_sum = N * (N ** 2 + 1) / 2
+	magic_sum = N * (N ** 2 + 1) // 2
 
 	# 1) Different number per square
 	# INSERT CODE HERE
@@ -38,7 +38,7 @@ def problem(N):
 	for x in range(N):
 		column = ['{},{}'.format(x, y) for y in range(N)]
 		c = ExactSum(column, magic_sum)
-		c.name = 'ExactSum'
+		c.name = 'ExactSum Col {}'.format(x)
 		constraints.append(c)
 
 
@@ -48,7 +48,7 @@ def problem(N):
 	for y in range(N):
 		row = ['{},{}'.format(x, y) for x in range(N)]
 		c = ExactSum(row, magic_sum)
-		c.name = 'ExactSum'
+		c.name = 'ExactSum Row {}'.format(y)
 		constraints.append(c)
 
 
@@ -57,7 +57,7 @@ def problem(N):
 	# INSERT CODE HERE
 	fdag = ['{},{}'.format(x, x) for x in range(N)]
 	c = ExactSum(fdag, magic_sum)
-	c.name = 'ExactSum'
+	c.name = 'ExactSum Fdiag'
 	constraints.append(c)
 
 
@@ -66,7 +66,7 @@ def problem(N):
 	# INSERT CODE HERE
 	bdag = ['{},{}'.format(x, N-x-1) for x in range(N)]
 	c = ExactSum(bdag, magic_sum)
-	c.name = 'ExactSum'
+	c.name = 'ExactSum Bdiag'
 	constraints.append(c)
 	
 

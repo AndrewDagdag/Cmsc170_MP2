@@ -6,14 +6,14 @@ def first_unassigned(state):
 	problem = state.problem
 	solution = state.solution
 
-	unassigned_vars = problem.unassigned_variables(solution)	
+	unassigned_vars = problem.unassigned_variables(solution)
 	return unassigned_vars[0]
 
 def random_unassigned(state):
 	problem = state.problem
 	solution = state.solution
 
-	unassigned_vars = problem.unassigned_variables(solution)	
+	unassigned_vars = problem.unassigned_variables(solution)
 	return random.choice(unassigned_vars)
 
 def custom_variable_selector(state):
@@ -27,35 +27,34 @@ def custom_variable_selector(state):
 
 	unassigned_var = first_unassigned(state)
 	unassigned_vars = problem.unassigned_variables(solution)
-	constraints = problem.constraints
-
 	constraint_dict = dict()
 
-	for un_var in unassigned_vars:
-		cntr = 0
-		for constraint in constraints:
-			for const_var in constraint.variables:
-				if const_var!=un_var and const_var in unassigned_vars:
-					cntr += 1
-				constraint_dict[const_var] = cntr
-
-	for variable in unassigned_vars:
+	for var in unassigned_vars:
 		var_cntr = unassigned_var_cntr = 0
 		# MRV, if the length of the domain values of the variable
 		# is less than that of the unassigned variable, select the variable
-		if len(domain[variable]) < len(domain[unassigned_var]):
-			unassigned_var = variable
+		if len(domain[var]) < len(domain[unassigned_var]):
+			unassigned_var = var
 		# DH
-		elif len(domain[variable]) == len(domain[unassigned_var]):
-			if constraint_dict[variable] >= constraint_dict[unassigned_var]:
-				unassigned_var = variable
+		elif len(domain[var]) == len(domain[unassigned_var]):
+			cntr = 0
+			for constraint in problem.constraints:
+				for constraint_var in constraint.variables:
+					if constraint_var!=var and constraint_var in unassigned_vars:
+						cntr += 1
+					constraint_dict[constraint_var] = cntr
+			if constraint_dict[var] >= constraint_dict[unassigned_var]:
+				unassigned_var = var
 
 	return unassigned_var
 	
-	# Suggestions: 
+	# Suggestions:
 	# Heuristic 1: minimum remaining values = select variables with fewer values left in domain
 	# Heuristic 2: degree heuristic = select variables related to more constraints
 	# Can use just one heuristic, or chain together heuristics (tie-break)
+
+	# select variable with least remaining values and most constrained
+
 
 ### VALUE ORDERING FUNCTIONS ###
 
@@ -81,43 +80,48 @@ def custom_value_ordering(state,variable):
 	# INSERT CODE HERE
 	# Write your value ordering code here 
 	# Return sorted values, accdg. to some heuristic
-	
-	state_domain = state.domain
+
 	temp_dict = dict()
-	
 	new_domain_lengths = []
 	return_val = []
 	
-	domainLength = len(domain)
-
-	if domainLength != 0:
+	if len(domain) != 0:
 		for domain_val in domain:
 			new_domain_length = 0
 
+			# Create new state
 			new_state = state.copy()
 			new_state.assign(variable, domain_val)
 			forward_checking(new_state, variable)
 
 			new_state_domain = new_state.domain
+
+			# Get the total of possible values assignable to the variables of the state
 			for var in new_state_domain.items():
 				new_domain_length = new_domain_length + len(var[1])
 
+			# Associate every domain value with the new domain length
 			temp_dict[domain_val] = new_domain_length
-		
+			
+		# Sort the dictionary from greatest to least
 		sorted_dict = sorted(temp_dict.items(), key=lambda x: x[1], reverse=True)
 		
+		# Make an array of values in the dictionary
 		for val in sorted_dict:
 			return_val.append(val[0])
 		
 		return return_val
 	else:
-		return random_order(state, variable)
+		return default_order(state, variable)
 
 	# Suggestions:
 	# Heuristic: least constraining value (LCV)
 	# LCV = prioritize values that filter out fewer values in other variables' domains
 	# Hint: you will use state.copy() for new_state, use new_state.assign, and use forward_checking() on new_state
 	# Count the number of filtered values by comparing the total from current state and new_state
+
+	# generate all possible states for the current state and variable
+	# sort by combined domain sizes in descending order for LCV
 
 ### FILTERING FUNCTIONS ###
 

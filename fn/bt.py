@@ -24,29 +24,34 @@ def custom_variable_selector(state):
 	# INSERT CODE HERE
 	# Write your variable ordering code here 
 	# Return an unassigned variable
-	unassigned_variable = first_unassigned(state)
+
+	unassigned_var = first_unassigned(state)
+	unassigned_vars = problem.unassigned_variables(solution)
 	constraints = problem.constraints
 
-	# make a map of variable and unassigned variable with their constraints
+	constraint_dict = dict()
 
-	# alt
-	# unvars = problem.unassigned_variables(solution)
-	# min_var = unvars[0]
+	for un_var in unassigned_vars:
+		cntr = 0
+		for constraint in constraints:
+			for const_var in constraint.variables:
+				if const_var!=un_var and const_var in unassigned_vars:
+					cntr += 1
+				constraint_dict[const_var] = cntr
 
-	for variable in domain:
+	for variable in unassigned_vars:
 		var_cntr = unassigned_var_cntr = 0
-		if domain[variable] < domain[unassigned_variable]:
-			unassigned_variable = variable
-		elif domain[variable] == domain[unassigned_variable]:
-			for constraint in constraints:
-				if variable in constraint.variables:
-					var_cntr += 1
-				if unassigned_variable in constraint.variables:
-					unassigned_var_cntr += 1
-			if var_cntr > unassigned_var_cntr:
-				unassigned_variable = variable
-	print ("Return: ", unassigned_variable)
-	return unassigned_variable
+		# MRV, if the length of the domain values of the variable
+		# is less than that of the unassigned variable, select the variable
+		if len(domain[variable]) < len(domain[unassigned_var]):
+			unassigned_var = variable
+		# DH
+		elif len(domain[variable]) == len(domain[unassigned_var]):
+			if constraint_dict[variable] >= constraint_dict[unassigned_var]:
+				unassigned_var = variable
+
+	return unassigned_var
+	
 	# Suggestions: 
 	# Heuristic 1: minimum remaining values = select variables with fewer values left in domain
 	# Heuristic 2: degree heuristic = select variables related to more constraints
@@ -76,13 +81,37 @@ def custom_value_ordering(state,variable):
 	# INSERT CODE HERE
 	# Write your value ordering code here 
 	# Return sorted values, accdg. to some heuristic
-	print ("State: ",state)
-	print ("Variable: ",variable)
-
+	
+	state_domain = state.domain
+	temp_dict = dict()
+	
+	new_domain_lengths = []
+	return_val = []
+	
 	domainLength = len(domain)
-	if domainLength > 0:
+
+	if domainLength != 0:
+		for domain_val in domain:
+			new_domain_length = 0
+
+			new_state = state.copy()
+			new_state.assign(variable, domain_val)
+			forward_checking(new_state, variable)
+
+			new_state_domain = new_state.domain
+			for var in new_state_domain.items():
+				new_domain_length = new_domain_length + len(var[1])
+
+			temp_dict[domain_val] = new_domain_length
 		
+		sorted_dict = sorted(temp_dict.items(), key=lambda x: x[1], reverse=True)
+		
+		for val in sorted_dict:
+			return_val.append(val[0])
+		
+		return return_val
 	else:
+		return random_order(state, variable)
 
 	# Suggestions:
 	# Heuristic: least constraining value (LCV)

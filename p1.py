@@ -98,7 +98,6 @@ def test3():
     config.select_variable_fn = custom_variable_selector
     config.sort_values_fn = custom_value_ordering
     config.filter_fn = forward_checking
-    
 
     solver = BacktrackingSolver(problem,config)
     solver.solve()

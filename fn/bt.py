@@ -6,14 +6,14 @@ def first_unassigned(state):
 	problem = state.problem
 	solution = state.solution
 
-	unassigned_vars = problem.unassigned_variables(solution)	
+	unassigned_vars = problem.unassigned_variables(solution)
 	return unassigned_vars[0]
 
 def random_unassigned(state):
 	problem = state.problem
 	solution = state.solution
 
-	unassigned_vars = problem.unassigned_variables(solution)	
+	unassigned_vars = problem.unassigned_variables(solution)
 	return random.choice(unassigned_vars)
 
 def custom_variable_selector(state):
@@ -24,33 +24,33 @@ def custom_variable_selector(state):
 	# INSERT CODE HERE
 	# Write your variable ordering code here 
 	# Return an unassigned variable
-	unassigned_variable = first_unassigned(state)
-	constraints = problem.constraints
-
-	# make a map of variable and unassigned variable with their constraints
-
-	# alt
-	# unvars = problem.unassigned_variables(solution)
-	# min_var = unvars[0]
-
-	for variable in domain:
-		var_cntr = unassigned_var_cntr = 0
-		if domain[variable] < domain[unassigned_variable]:
-			unassigned_variable = variable
-		elif domain[variable] == domain[unassigned_variable]:
-			for constraint in constraints:
-				if variable in constraint.variables:
-					var_cntr += 1
-				if unassigned_variable in constraint.variables:
-					unassigned_var_cntr += 1
-			if var_cntr > unassigned_var_cntr:
-				unassigned_variable = variable
-	print ("Return: ", unassigned_variable)
-	return unassigned_variable
-	# Suggestions: 
+	# Suggestions:
 	# Heuristic 1: minimum remaining values = select variables with fewer values left in domain
 	# Heuristic 2: degree heuristic = select variables related to more constraints
 	# Can use just one heuristic, or chain together heuristics (tie-break)
+
+	# select variable with least remaining values and most constrained
+	selected = first_unassigned(state)
+
+	for var in problem.unassigned_variables(solution):
+		mrv = len(domain[selected])
+		mrv_var = len(domain[var])
+
+		if mrv_var < mrv:
+			selected = var
+		elif mrv_var == mrv:
+			degree = 0
+			degree_var = 0
+
+			for constraint in problem.constraints:
+				if selected in constraint.variables:
+					degree += 1
+				if var in constraint.variables:
+					degree_var += 1
+			if degree_var > degree:
+				selected = var
+	return selected
+
 
 ### VALUE ORDERING FUNCTIONS ###
 
@@ -76,19 +76,25 @@ def custom_value_ordering(state,variable):
 	# INSERT CODE HERE
 	# Write your value ordering code here 
 	# Return sorted values, accdg. to some heuristic
-	print ("State: ",state)
-	print ("Variable: ",variable)
-
-	domainLength = len(domain)
-	if domainLength > 0:
-		
-	else:
-
 	# Suggestions:
 	# Heuristic: least constraining value (LCV)
 	# LCV = prioritize values that filter out fewer values in other variables' domains
 	# Hint: you will use state.copy() for new_state, use new_state.assign, and use forward_checking() on new_state
 	# Count the number of filtered values by comparing the total from current state and new_state
+
+	# generate all possible states for the current state and variable
+	# sort by combined domain sizes in descending order for LCV
+	states = {}
+	for value in domain:
+		new_state = state.copy()
+		new_state.assign(variable, value)
+		forward_checking(new_state, variable)
+		states[value] = new_state
+	values = list(states.keys())
+	values.sort(key=lambda val: sum(map(len, states[val].domain.values())), reverse=True)
+
+	return values
+
 
 ### FILTERING FUNCTIONS ###
 

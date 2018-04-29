@@ -29,7 +29,49 @@ def knapsack_neighbor_generator(state):
 
     while True:
         neighbor = state.copy()
-
+        if constraint.test(solution):
+            value = None
+            new_value = 0
+            while value != 1:
+                var = random.choice(problem.variables)
+                value = solution[var]
+            neighbor.solution[var] = new_value
+            neighbor.changes = [(var, new_value)]
+        else:
+            var = random.randint(1, 3)
+            if var == 1: #add
+                print("I add")
+                value = None
+                new_value = 1
+                while value != 0:
+                    var = random.choice(problem.variables)
+                    value = solution[var]
+                neighbor.solution[var] = new_value
+                neighbor.changes = [(var, new_value)]
+            elif var == 2: #remove
+                print("I remove")
+                value = None
+                new_value = 0
+                while value != 1:
+                    var = random.choice(problem.variables)
+                    value = solution[var]
+                neighbor.solution[var] = new_value
+                neighbor.changes = [(var, new_value)]
+            else:   #swap
+                print("I swap")
+                value1 = None
+                value2 = None
+                while value1 != 1 and value2 != 0:
+                    var1 = random.choice(problem.variables)
+                    var2 = random.choice(problem.variables)
+                    if var1 == var2:
+                        continue
+                    value1 = solution[var1]
+                    value2 = solution[var2]
+                neighbor.solution[var1] = 1
+                neighbor.solution[var2] = 0
+                neighbor.changes = [(var1, 1), (var2, 0)]
+        yield neighbor
         # INSERT CODE HERE
         # Idea: If knapsack is already full, neighbor = remove a random item from current solution (try to remove excess)
         #       If knapsack is not yet full, neighbor = randomly change up to 2 values (includes adding item, removing item, swapping)

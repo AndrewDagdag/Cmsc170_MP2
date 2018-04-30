@@ -179,7 +179,7 @@ class KnapsackCapacity(Constraint):
 class VertexCover(Constraint):
 	def __init__(self,variables,edges,penalty=0):
 		self.variables = variables
-		self.edges = edges 
+		self.edges = edges
 		self.penalty = penalty or float('inf') # hard, if penalty undefined
 		self.name = 'undefined'
 
@@ -192,7 +192,8 @@ class VertexCover(Constraint):
 		# dont test if not all vars assigned 
 		# return True / False
 
-		if not set(solution.keys()).issuperset(self.variables): #Test only if all vars assigned
+		# Only test if all vars assigned
+		if not set(self.variables).issubset(solution.keys()):
 			return True
 		
 		active_vertices = []
